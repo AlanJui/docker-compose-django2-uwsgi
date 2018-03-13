@@ -1,0 +1,5 @@
+FROM nginx:latest
+LABEL maintainer Alan Jui "alanjui.1960@gmail.com"
+RUN mkdir /code
+WORKDIR /code
+COPY ./app /code

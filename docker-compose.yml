@@ -1,0 +1,40 @@
+version: '3'
+services:
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: Passw0rd
+    ports:
+      # (HOST:CONTAINER)
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+
+  web:
+    build: ./app
+    restart: always
+    command: uwsgi --ini uwsgi.ini
+    ports:
+      - "8002:8000"
+    volumes:
+#      - app_data:/code
+      - ./app:/code
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+#      - app_data:/code
+      - ./app:/code
+      - ./log:/var/log/nginx
+    depends_on:
+      - web
+
+volumes:
+  db_data:
+  app_data:
